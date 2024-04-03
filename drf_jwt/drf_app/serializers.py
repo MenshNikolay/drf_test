@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-#from drf_app.models import User
+from rest_framework import serializers
+from .models import RefCode
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -14,10 +16,21 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
 
-from rest_framework import serializers
-from .models import RefCode
+
 
 class RefCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = RefCode
         fields = ['ref_code', 'user','creation_date', 'exp_date']    
+
+
+class RefCodeEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RefCode
+        fields = ['ref_code']    
+
+
+class RefUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RefCode
+        fields = ['referrer']
