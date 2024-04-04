@@ -3,9 +3,9 @@ from rest_framework import status, generics,permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserSerializer, RefCodeSerializer, RefCodeEmailSerializer
 from rest_framework.permissions import AllowAny
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 
-from drf_app.models import RefCode
+from drf_app.models import RefCode, User
 from drf_app.utils import gen_ref_code
 
 class RegisterView(generics.CreateAPIView):
@@ -82,7 +82,9 @@ class RefCodeEmailAPIView(generics.CreateAPIView):
     
 
 class RegesterViaRefCode(generics.CreateAPIView):
-        serializer_class = RefCodeSerializer
+        serializer_class = UserSerializer
+        authentication_classes = []  
+        permission_classes = [AllowAny] 
         
         def create(self, request, *args, **kwargs):
             ref_code = request.data.get('referral_code')
@@ -94,7 +96,7 @@ class RegesterViaRefCode(generics.CreateAPIView):
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
                 user = serializer.save()
-                user.referral_user = referrer.user
+                user.referral_id = referrer
                 user.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -104,5 +106,5 @@ class ReferralListView(generics.ListAPIView):
 
     def get_queryset(self):
         referrer_id = self.kwargs['referrer_id']
-        return User.objects.filter(referral_user_id=referrer_id)
+        return User.objects.filter(referrer_id=referrer_id)
           

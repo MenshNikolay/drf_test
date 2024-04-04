@@ -9,7 +9,7 @@ urlpatterns = [
     path('api/register/', RegisterView.as_view(), name='register'),
     path('api/referral-code/create/', RefCodeInitView.as_view(), name='referral-code-create'),
     path('api/referral-code/delete/', RefCodeInitView.as_view(), name='referral-code-delete'),
-    path('api/register/', RegesterViaRefCode.as_view(), name='register-referral-user'),
+    path('api/register-via-code/', RegesterViaRefCode.as_view(), name='register-referral-user'),
     path('api/referrals/<int:referrer_id>/', ReferralListView.as_view(), name='referral-list'),
 
 
